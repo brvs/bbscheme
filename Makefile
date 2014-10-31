@@ -1,29 +1,30 @@
 
 CFLAGS = -Wall -g
 CC = gcc
-OBJS = obj/bb_model.o obj/bb_read.o obj/bb_scheme.o obj/bb_write.o obj/bb_procedures.o
+OBJS = obj/model.o obj/read.o obj/bscm.o obj/write.o obj/procedures.o
+HEADERS = src/bscm.h
 
 .PHONY: all clean
 
-all: bin/bbscheme
+all: bin/bscm
 
-bin/bbscheme: $(OBJS)
-	$(CC) $(CFLAGS) -o bin/bbscheme $(OBJS)
+bin/bscm: $(OBJS)
+	$(CC) $(CFLAGS) -o bin/bscm $(OBJS)
 
-obj/bb_model.o: src/bb_scheme.h src/bb_model.c
-	$(CC) $(CFLAGS) -c src/bb_model.c -o obj/bb_model.o
+obj/model.o: $(HEADERS) src/model.c
+	$(CC) $(CFLAGS) -c src/model.c -o obj/model.o
 
-obj/bb_read.o: src/bb_scheme.h src/bb_read.c
-	$(CC) $(CFLAGS) -c src/bb_read.c -o obj/bb_read.o
+obj/read.o: $(HEADERS) src/read.c
+	$(CC) $(CFLAGS) -c src/read.c -o obj/read.o
 
-obj/bb_write.o: src/bb_scheme.h src/bb_write.c
-	$(CC) $(CFLAGS) -c src/bb_write.c -o obj/bb_write.o
+obj/write.o: $(HEADERS) src/write.c
+	$(CC) $(CFLAGS) -c src/write.c -o obj/write.o
 
-obj/bb_procedures.o: src/bb_scheme.h src/bb_procedures.c
-	$(CC) $(CFLAGS) -c src/bb_procedures.c -o obj/bb_procedures.o
+obj/procedures.o: $(HEADERS) src/procedures.c
+	$(CC) $(CFLAGS) -c src/procedures.c -o obj/procedures.o
 
-obj/bb_scheme.o: src/bb_scheme.h src/bb_scheme.c
-	$(CC) $(CFLAGS) -c src/bb_scheme.c -o obj/bb_scheme.o
+obj/bscm.o: $(HEADERS) src/bscm.c
+	$(CC) $(CFLAGS) -c src/bscm.c -o obj/bscm.o
 
 clean:
 	rm bin/* obj/*

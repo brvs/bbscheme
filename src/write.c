@@ -1,31 +1,31 @@
 
 #include <stdio.h>
 
-#include "bb_scheme.h"
+#include "bscm.h"
 
 
-void bb_write_pair(bb_object *obj) {
-    bb_write(obj->value.pair.car);
-    if(obj->value.pair.cdr == bb_empty_list) {
-    } else if(bb_ispair(obj->value.pair.cdr)) {
+void write_pair(object_t *obj) {
+    write(obj->value.pair.car);
+    if(obj->value.pair.cdr == empty_list) {
+    } else if(ispair(obj->value.pair.cdr)) {
         printf(" ");
-        bb_write_pair(obj->value.pair.cdr);
+        write_pair(obj->value.pair.cdr);
     } else {
         printf(" . ");
-        bb_write(obj->value.pair.cdr);
+        write(obj->value.pair.cdr);
     }
 }
 
-void bb_write(bb_object *obj) {
+void write(object_t *obj) {
     char *start;
     switch(obj->type) {
-    case BB_FIXNUM:
+    case FIXNUM:
         printf("%ld", obj->value.fixnum);
         break;
-    case BB_BOOLEAN:
-        printf("#%c", obj == bb_true ? 't' : 'f');
+    case BOOLEAN:
+        printf("#%c", obj == true_obj ? 't' : 'f');
         break;
-    case BB_CHARACTER:
+    case CHARACTER:
         printf("#\\");
         switch(obj->value.character) {
             case '\t': printf("tab"); break;
@@ -34,7 +34,7 @@ void bb_write(bb_object *obj) {
             default: printf("%c", obj->value.character);
         }
         break;
-    case BB_STRING:
+    case STRING:
         putchar('"');
         for(start = obj->value.string; *start != '\0'; start++) {
             if(*start == '\n') {
@@ -47,35 +47,35 @@ void bb_write(bb_object *obj) {
         }
         putchar('"');
         break;
-    case BB_EMPTY_LIST:
+    case EMPTY_LIST:
         printf("()");
         break;
-    case BB_PAIR:
+    case PAIR:
         printf("(");
-        bb_write_pair(obj);
+        write_pair(obj);
         printf(")");
         break;
-    case BB_SYMBOL:
+    case SYMBOL:
         printf("%s", obj->value.symbol);
         break;
-    case BB_PRIMITIVE_PROCEDURE:
+    case PRIMITIVE_PROCEDURE:
         printf("<primitive proc: ");
-        bb_write(obj->value.prim_proc.name);
+        write(obj->value.prim_proc.name);
         printf(">");
         break;
-    case BB_COMPOUND_PROCEDURE:
+    case COMPOUND_PROCEDURE:
         printf("<lambda: ");
-        if(bb_isemptylist(obj->value.compound_proc.name) ) {
+        if(isemptylist(obj->value.compound_proc.name) ) {
             printf("anonymous %p", (void*)obj);
         } else {
-            bb_write(obj->value.compound_proc.name);
+            write(obj->value.compound_proc.name);
         }
         printf(">");
         break;
-    case BB_VOID:
+    case VOID:
         break;
     default:
-        fprintf(stderr, "Unknown object type: %d\n", obj->type);
+        fprintf(stderr, "Unknown object_t type: %d\n", obj->type);
     }
 }
 
